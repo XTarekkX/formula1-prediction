@@ -38,6 +38,9 @@ The model relies on the following numeric features for each driver:
 | `team_dnf_before`        | Team DNFs so far                     |
 | `team_avg_finish_before` | Team average finish before this race |
 
+![Feature Importance](features.png)
+*Figure: Feature importance showing what the model relies on most.*
+
 ---
 
 ## 🛠 Model Training
@@ -63,8 +66,11 @@ ranker = xgb.XGBRanker(
 
 * **Evaluation:**
 
-  * Top‑3 accuracy on unseen seasons
-  * Correlation of predicted ranking score vs. actual winner
+  * Top‑1 accuracy (2002): 0.65
+  * Top‑3 accuracy (2002): 0.82
+  * Top‑1 accuracy (2008): 0.72
+  * Train correlation (score vs win): 0.531
+  * Test correlation (score vs win): 0.509
 
 ---
 
@@ -85,8 +91,6 @@ df['race_id'] = df['year'].astype(str) + "_" + df['round'].astype(str) + "_" + d
 ```
 
 ### 3. Fill missing numeric values
-
-Use median values from the training dataset:
 
 ```python
 df[numeric_cols] = df[numeric_cols].fillna(df_train[numeric_cols].median())
@@ -113,30 +117,35 @@ top3 = df.groupby('race_id').apply(
 
 ### 6. Display predictions
 
-```python
-for race_id, grp in top3.groupby('race_id'):
-    print(f"Race: {race_id}")
-    for i, r in enumerate(grp.itertuples(), 1):
-        print(f"  Predicted {i:>2}: {r.driver_name:20s}  score = {r.pred_score:.3f}")
-    print("-"*60)
+prediciton for **2025 UAE GP**!!!!
+
+```
+=== Top‑3 predictions for 2025 UAE races ===
+Race: 2025_24_United_Arab_Emirates_GP
+  Predicted  1: Lando Norris          score = 0.023
+  Predicted  2: MAX VERSTAPPEN        score = 0.013
+  Predicted  3: Oscar Piastri         score = 0.011
 ```
 
 ---
 
 ## 📈 Evaluation
 
-* **Top‑3 accuracy:** Fraction of races where the actual winner is among the predicted top 3.
-* **Feature importance:** Can be visualized via XGBoost built-in feature importance plotting.
+* **Top‑1 accuracy:** Fraction of races where the actual winner is the top prediction
+* **Top‑3 accuracy:** Fraction of races where the actual winner is among the predicted top 3
+* **Feature importance:** Visualized in `features.png`
 * **Generalization:** Model is trained on 2019–2024 seasons and tested on older/unseen seasons (e.g., 2002) to ensure it learns general patterns rather than memorizing data.
 
 ---
+
 ## 📂 File Structure
 
 ```
 .
 ├── README.md
-├── xgboost_ranker.json   # Saved trained model
-├── formula1-prediction.ipynb        # training and testing
+├── xgboost_ranker.json       # Saved trained model
+├── formula1-prediction.ipynb # Training and testing code
+├── features.png              # Feature importance visualization
 ```
 
 ---
