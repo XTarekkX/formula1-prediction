@@ -151,7 +151,7 @@ Race: 2025_24_United_Arab_Emirates_GP
 ---
 
 ## ⚡ Notes
-
+this is the best i could do with limited data i collected myself from the FastF1 and it could be better
 * The model outputs **scores**, not guaranteed winners. Higher scores → more likely to finish ahead.
 * Always check that your input CSV contains all required features for accurate predictions.
 * You can visualize **feature importance** to see which attributes the model relies on most.
